@@ -1,7 +1,0 @@
-{
-    "git.ignoreLimitWarning": true,
-    "breadcrumbs.enabled": true,
-    "files.associations": {
-        "stdio.h": "c"
-    }
-}
