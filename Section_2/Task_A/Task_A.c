@@ -1,61 +1,78 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-// Функция сортировки нисходящим слиянием
-void mergeSort(long long *a, long l, long r)
+// Слияние
+void Merge(long long a[], long left, long mid, long right)
 {
-  if (l == r) return; // границы сомкнулись
-  int mid = (l + r) / 2; // определяем середину последовательности
-  // и рекурсивно вызываем функцию сортировки для каждой половины
-  mergeSort(a, l, mid);
-  mergeSort(a, mid + 1, r);
-  int i = l;  // начало первого пути
-  int j = mid + 1; // начало второго пути
-  long long *tmp = (long long*)malloc(r * sizeof(long long)); // дополнительный массив
-  for (int step = 0; step < r - l + 1; step++) // для всех элементов дополнительного массива
+  long it1 = 0;
+  long it2 = 0;
+  long result[right - left];
+
+  while ((left + it1 < mid) & (mid + it2 < right)){
+    if (a[left + it1] < a[mid + it2])
+    {
+      result[it1 + it2] = a[left + it1];
+      it1 += 1;
+    }
+    else
+    {
+      result[it1 + it2] = a[mid + it2];
+      it2 += 1;
+    }}
+    
+  while (left + it1 < mid)
   {
-    // записываем в формируемую последовательность меньший из элементов двух путей
-    // или остаток первого пути если j > r
-    if ((j > r) || ((i <= mid) && (a[i] < a[j]))) 
-    {
-      tmp[step] = a[i];
-      i++;
-    }
-    else 
-    {
-      tmp[step] = a[j];
-      j++;
-    }
+    result[it1 + it2] = a[left + it1];
+    it1 += 1;
   }
-  // переписываем сформированную последовательность в исходный массив
-  for (int step = 0; step < r - l + 1; step++)
-    a[l + step] = tmp[step];
+
+  while (mid + it2 < right)
+  {
+    result[it1 + it2] = a[mid + it2];
+    it2 += 1;
+  }
+
+  for (long i = 0; i < it1 + it2; i++)
+    a[left + i] = result[i];
+}
+
+//Рекурсивная сортировка слиянием
+void MergeSort(long long a[], long left, long right)
+{
+  if (left + 1 >= right)
+    return;
+  long mid = (left + right) / 2;
+  MergeSort(a, left, mid);
+  MergeSort(a, mid, right);
+  Merge(a, left, mid, right);
 }
 
 int main()
 {
 
-    FILE *fin, *fout;
-    fin = fopen("sort.in", "r");
-    fout = fopen("sort.out", "w");
-    long n;
-    fscanf(fin, "%ld", &n);
-    long long arr[n], arr2[n];
+  FILE *fin, *fout;
+  fin = fopen("sort.in", "r");
+  fout = fopen("sort.out", "w");
+  long n;
+  fscanf(fin, "%ld", &n);
+  long long arr[n];
 
-    for (int i = 0; i < n; i++)
-    {
-        fscanf(fin, "%lld", &arr[i]);
-    }
+//Ввод массива
+  for (int i = 0; i < n; i++)
+  {
+    fscanf(fin, "%lld", &arr[i]);
+  }
 
-    mergeSort(arr,1,n);
+//Сортировка
+  MergeSort(arr, 0, n);
 
-    for (int i = 0; i < n; i++)
-    {
-        fprintf(fout, "%lld ", arr[i]);
-    }
+//Вывод
+  for (int i = 0; i < n; i++)
+  {
+    fprintf(fout, "%lld ", arr[i]);
+  }
 
-    fclose(fin);
-    fclose(fout);
-    return 0;
+  fclose(fin);
+  fclose(fout);
+  return 0;
 }
