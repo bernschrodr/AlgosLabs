@@ -20,7 +20,7 @@ void Merge(long a[], long left, long mid, long right, long Counter)
 		{
 			result[it1 + it2] = a[mid + it2];
 			it2 += 1;
-			Counter += (a.Length - it1);
+			Counter += ((sizeof(a) / sizeof(*a)) - it1);
 		}
 	}
 
@@ -60,14 +60,14 @@ int main()
 	fs >> size;
 	long Inp[n];
 	
-	for (int i = 0; i < size; ++i) fs >> Inp[i];
+	for (int i = 0; i < size; ++i) fs >> Inp[i] >> endl;
 
 	fs.close();
 
-	MergeSort(Inp, 0, Inp.size() - 1, k);
+	MergeSort(Inp, 0, size - 1, k);
 
 	fs.open("inversions.out", fstream::out);
-	fs << k;
+	fs << k << endl;
 	fs.close();
 
 
