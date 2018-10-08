@@ -1,5 +1,4 @@
 #include <fstream>
-#include <string>
 #include <vector>
 using namespace std;
 
@@ -41,7 +40,7 @@ void Merge(long a[], long left, long mid, long right, long Counter)
 }
 
 //Рекурсивная сортировка слиянием
-void MergeSort(long long a[], long left, long right, long Counter)
+void MergeSort(long a[], long left, long right, long Counter)
 {
 	if (left + 1 >= right)
 		return;
@@ -58,9 +57,9 @@ int main()
 	
 	long size,k;
 	fs >> size;
-	long Inp[n];
+	long Inp[size];
 	
-	for (int i = 0; i < size; ++i) fs >> Inp[i] >> endl;
+	for (int i = 0; i < size; ++i) fs >> Inp[i];
 
 	fs.close();
 
