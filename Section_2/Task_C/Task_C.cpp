@@ -3,11 +3,11 @@
 using namespace std;
 
 // Слияние
-void Merge(long a[], long left, long mid, long right, long Counter)
+void Merge(vector<long> &a, long left, long mid, long right, long Counter)
 {
 	long it1 = 0;
 	long it2 = 0;
-	long result[right - left];
+	vector <long> result(right - left);
 
 	while ((left + it1 < mid) & (mid + it2 < right)) {
 		if (a[left + it1] < a[mid + it2])
@@ -19,7 +19,7 @@ void Merge(long a[], long left, long mid, long right, long Counter)
 		{
 			result[it1 + it2] = a[mid + it2];
 			it2 += 1;
-			Counter += ((sizeof(a) / sizeof(*a)) - it1);
+			Counter += (a.size() - it1);
 		}
 	}
 
@@ -40,7 +40,7 @@ void Merge(long a[], long left, long mid, long right, long Counter)
 }
 
 //Рекурсивная сортировка слиянием
-void MergeSort(long a[], long left, long right, long Counter)
+void MergeSort(vector<long> &a, long left, long right, long Counter)
 {
 	if (left + 1 >= right)
 		return;
@@ -52,12 +52,12 @@ void MergeSort(long a[], long left, long right, long Counter)
 int main()
 {
 	fstream fs;
-
 	fs.open("inversions.in", fstream::in);
 	
 	long size,k;
 	fs >> size;
-	long Inp[size];
+
+	vector<long> Inp(size);
 	
 	for (int i = 0; i < size; ++i) fs >> Inp[i];
 
@@ -66,10 +66,13 @@ int main()
 	MergeSort(Inp, 0, size - 1, k);
 
 	fs.open("inversions.out", fstream::out);
+	for (int i = 0; i < size; ++i)
+	fs << Inp[i] << endl;
 	fs << k << endl;
+	
 	fs.close();
 
 
 
 	return 0;
-}
+	}
