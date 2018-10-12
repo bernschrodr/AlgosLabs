@@ -1,78 +1,87 @@
 #include <fstream>
-#include <vector>
 using namespace std;
 
 // Слияние
-void Merge(vector<long> &a, long left, long mid, long right, long Counter)
-{
-	long it1 = 0;
-	long it2 = 0;
-	vector <long> result(right - left);
+// Функция будет собой возвращать значение счетчика
 
-	while ((left + it1 < mid) & (mid + it2 < right)) {
-		if (a[left + it1] < a[mid + it2])
+long long _MergeSort(long long Inp[], long long Temp[], long long Left, long long Right);
+long long Merge(long long Inp[], long long Temp[], long long Left, long long Mid, long long Right);
+
+long long MergeSort(long long Inp[], long long Inpay_Size)
+{
+	long long *Temp = (long long *)malloc(sizeof(long long) * Inpay_Size);
+	return _MergeSort(Inp, Temp, 0, Inpay_Size - 1);
+}
+
+long long _MergeSort(long long Inp[], long long Temp[], long long Left, long long Right)
+{
+	long long Mid, Count = 0;
+	if (Right > Left)
+	{
+
+		Mid = (Right + Left) / 2;
+
+		Count = _MergeSort(Inp, Temp, Left, Mid);
+		Count += _MergeSort(Inp, Temp, Mid + 1, Right);
+
+		Count += Merge(Inp, Temp, Left, Mid + 1, Right);
+	}
+	return Count;
+}
+
+long long Merge(long long Inp[], long long Temp[], long long Left, long long Mid, long long Right)
+{
+	long long i, j, k;
+	long long Count = 0;
+
+	i = Left;
+	j = Mid;
+	k = Left;
+	while ((i <= Mid - 1) && (j <= Right))
+	{
+		if (Inp[i] <= Inp[j])
 		{
-			result[it1 + it2] = a[left + it1];
-			it1 += 1;
+			Temp[k++] = Inp[i++];
 		}
+
 		else
 		{
-			result[it1 + it2] = a[mid + it2];
-			it2 += 1;
-			Counter += (a.size() - it1);
+			Temp[k++] = Inp[j++];
+
+			Count = Count + (Mid - i);
 		}
 	}
 
-	while (left + it1 < mid)
-	{
-		result[it1 + it2] = a[left + it1];
-		it1 += 1;
-	}
+	while (i <= Mid - 1)
+		Temp[k++] = Inp[i++];
 
-	while (mid + it2 < right)
-	{
-		result[it1 + it2] = a[mid + it2];
-		it2 += 1;
-	}
+	while (j <= Right)
+		Temp[k++] = Inp[j++];
 
-	for (long i = 0; i < it1 + it2; i++)
-		a[left + i] = result[i];
+	for (i = Left; i <= Right; i++)
+		Inp[i] = Temp[i];
+
+	return Count;
 }
 
-//Рекурсивная сортировка слиянием
-void MergeSort(vector<long> &a, long left, long right, long Counter)
-{
-	if (left + 1 >= right)
-		return;
-	long mid = (left + right) / 2;
-	MergeSort(a, left, mid, Counter);
-	MergeSort(a, mid, right, Counter);
-	Merge(a, left, mid, right, Counter);
-}
 int main()
 {
 	fstream fs;
 	fs.open("inversions.in", fstream::in);
-	
-	long size,k;
-	fs >> size;
 
-	vector<long> Inp(size);
-	
-	for (int i = 0; i < size; ++i) fs >> Inp[i];
+	long long Size;
+	fs >> Size;
+	long long *Inp = new long long[Size];
+
+	for (long long i = 0; i < Size; ++i)
+		fs >> Inp[i];
 
 	fs.close();
-
-	MergeSort(Inp, 0, size - 1, k);
 
 	fs.open("inversions.out", fstream::out);
-	for (int i = 0; i < size; ++i)
-	fs << Inp[i] << endl;
-	fs << k << endl;
-	
+	fs << MergeSort(Inp, Size) << endl;
+
 	fs.close();
 
-
-
 	return 0;
-	}
+}
