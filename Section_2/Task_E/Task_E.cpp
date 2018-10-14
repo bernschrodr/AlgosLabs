@@ -2,11 +2,52 @@
 #include <vector>
 using namespace std;
 
-void antiQsort(vector<long> &Inp)
+static int i = 0, j = 0;
+void partition(vector<int> &arr, int &l, int &r)
 {
-    for (int i = 2; i < Inp.size(); i++)
+    int k = (l + r) / 2;
+    int key = arr[k];
+    i = l;
+    j = r;
+
+    while (i <= j)
     {
-        swap(Inp[i], Inp[i / 2]);
+        while (arr[i] < key)
+            i++;
+        while (key < arr[j])
+            j--;
+        if (i <= j)
+        {
+            int t = arr[i];
+            arr[i] = arr[j];
+            arr[j] = t;
+            i++;
+            j--;
+        }
+    }
+}
+
+int kElement(vector<int> &arr, int l, int r, int k)
+{
+
+    if (r < l)
+    {
+        return arr[l];
+    }
+
+    partition(arr, l, r);
+
+    if (j + 1 <= k && k <= i - 1)
+    {
+        return arr[j + 1];
+    }
+    else if (l <= k && k <= j)
+    {
+        return kElement(arr, l, j, k);
+    }
+    else
+    {
+        return kElement(arr, i, r, k);
     }
 }
 
@@ -14,27 +55,26 @@ int main()
 {
     fstream fs;
     fs.open("kth.in", fstream::in);
-    long long n,k;
+    int n, k, A, B, C;
     fs >> n;
+    vector<int> Arr(n);
     fs >> k;
+    fs >> A;
+    fs >> B;
+    fs >> C;
+    fs >> Arr[0];
+    fs >> Arr[1];
 
     fs.close();
 
-    vector <long> Inp(n);
-
-    for (long i = 0; i < n; i++)
+    for (int i = 2; i < n; i++)
     {
-        Inp[i] = i + 1;
+        Arr[i] = A * Arr[i - 2] + B * Arr[i - 1] + C;
     }
-
-    antiQsort(Inp);
 
     fs.open("kth.out", fstream::out);
 
-    for (long i = 0; i < n; i++)
-    {
-        fs << Inp[i] << endl;
-    }
+    fs << kElement(Arr, 0, n - 1, k - 1) << endl;
 
     fs.close();
 
