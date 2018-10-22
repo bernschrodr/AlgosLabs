@@ -3,7 +3,11 @@
     "files.associations": {
         "iosfwd": "cpp",
         "xiosbase": "cpp",
+<<<<<<< HEAD
         "ostream": "cpp",
         "vector": "cpp"
+=======
+        "ostream": "cpp"
+>>>>>>> Task_C & Task_D
     }
 }
