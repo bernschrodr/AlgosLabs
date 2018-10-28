@@ -1,96 +1,60 @@
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
+
 using namespace std;
-
-string getMax(vector <string> &arr, int n) 
-{ 
-    vector <string> mx(1);
-    mx.push_back(arr[0]);
-    mx.erase(mx.begin());
-    
-    for (int i = 1; i < n; i++){
-        cout << mx[0];
-        if (arr[i].compare(mx[0]) <= 0){
-            mx.push_back(arr[i]);
-            mx.erase(mx.begin());
-            cout << mx[0];
-            }}
-    return mx[0];
-    
-} 
-  
-// A function to do counting sort of arr[] according to 
-// the digit represented by exp. 
-void countSort(vector <string> &arr, int n, int exp) 
-{ 
-    vector <string> output(n); // output array 
-    int i, count[256] = {0}; 
-    
-    // Store count of occurrences in count[] 
-    for (i = 0; i < n; i++) 
-        count[ (int)arr[i][exp] ]++; 
-  
-    // Change count[i] so that count[i] now contains actual 
-    //  position of this digit in output[] 
-    for (i = 1; i < 256; i++) 
-        count[i] += count[i - 1];
-    // Build the output array 
-    for (i = n - 1; i >= 0; i--) 
-    { 
-        output[ (int)count[ arr[i][exp] ] - 1] = arr[i]; 
-        count[ (int)arr[i][exp] ]--;
-    } 
-  
-    // Copy the output array to arr[], so that arr[] now 
-    // contains sorted numbers according to current digit 
-    for (i = 0; i < n; i++) 
-        arr[i] = output[i];
-} 
-  
-// The main function to that sorts arr[] of size n using  
-// Radix Sort 
-void radixsort(vector <string> &arr, int n) 
-{ 
-    // Find the maximum number to know number of digits 
-    vector <string> m(1);
-    m.push_back(getMax(arr, n));
-  
-    // Do counting sort for every digit. Note that instead 
-    // of passing digit number, exp is passed. exp is 10^i 
-    // where i is current digit number 
-    int exp = n;
-    while(!m.empty()){
-        countSort(arr, n, exp);
-        m.erase(m.end());
-        exp--;
-        printf(" + ");
-        }
-}
-
+void RadixSort(string *, string *, int *, int, int, int);
 int main()
 {
-    int n,k,m;
+    ifstream in("radixsort.in");
+    ofstream out("radixsort.out");
+    int n;
+    in >> n;
+    vector <string> arr(n);
+    vector <string> brr(n);
+    vector <int> ABC(256);
+    int lght;
+    in >> lght;
+    int phase;
+    in >> phase;
+    for (int i = 0; i < n; i++)
+        in >> arr[i];
+    
+    RadixSort(&arr[0], &brr[0], &ABC[0], n, phase, lght);
+    for (int i = 0; i < n - 1; i++)
+        out << arr[i] << endl;
+    out << arr[n - 1];
+    
+    in.close();
+    out.close();
+}
 
-    fstream fs;
-    fs.open("radixsort.in", fstream::in);
-    fs >> n >> k >> m;
-    vector <string> Arr(n);
-
-    for (int i = 0; i < n; ++i)
+void RadixSort(string * a, string * b, int * c, int n, int phase, int lght)
+{
+    char check = 0;
+    
+    for (int i = 0; i < phase; i++)
     {
-        fs >> Arr[i];
+        for (int j = 0; j < 256; j++)
+            c[j] = 0;
+        for (int j = 0; j < n; j++)
+        {
+            check = a[j][lght - i - 1];
+            c[check] += 1;
+        }
+        c[0] -= 1;
+        for (int j = 1; j < 256; j++)
+            c[j] += c[j - 1];
+        
+        for (int j = n - 1; j >= 0; j--)
+        {
+            check = a[j][lght - i - 1];
+            b[c[check]] = a[j];
+            c[check] -= 1;
+        }
+        
+        for (int j = 0; j < n; j++)
+            a[j] = b[j];
     }
-
-    radixsort(Arr,m);
-
-    fs.open("radixsort.out", fstream::out);
-    for (int i = 0; i < n; ++i)
-    {
-        fs << Arr[i] << "--" << endl;
-    }
-    fs.close();
-
-    return 0;
 }
