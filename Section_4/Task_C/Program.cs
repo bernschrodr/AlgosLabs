@@ -50,20 +50,21 @@ namespace Task_C
             StreamWriter sw = new StreamWriter(@"brackets.out");
             const int size = 10001;
             Stack St = new Stack(size);
-
+            int count=0;
             string bracket;
 
             while ((bracket = sr.ReadLine()) != null)
             {
-
+                count++;
                 for (int i = 0; i < bracket.Length; i++)
                 {
 
                     if (i == 0)
-                    {
+                    {   
                         if (bracket[i] == ')' || bracket[i] == ']')
                         {
-                            sw.WriteLine("NO");
+                            St.push(bracket[i]);
+                            //sw.WriteLine("NO");
                             break;
                         }
                     }
