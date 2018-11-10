@@ -3,23 +3,24 @@ using System.IO;
 
 namespace Task_C
 {
-    class Stack{
+    class Stack
+    {
 
         public static int size;
         public int count = 0;
         char[] stack;
         public Stack(int n)
         {
-            size=n;
+            size = n;
             stack = new char[n];
         }
-        
+
         public void push(char a)
         {
             stack[count] = a;
-            if(count != size-1)
+            if (count != size - 1)
                 ++count;
-                
+
         }
 
         public int pop()
@@ -30,15 +31,15 @@ namespace Task_C
         private char LastElement;
         public char last()
         {
-            if(count>0)
+            if (count > 0)
             {
-                LastElement = stack[count-1];
+                LastElement = stack[count - 1];
                 return LastElement;
             }
             else
                 return '0';
         }
-    
+
     }
 
     class Program
@@ -47,21 +48,18 @@ namespace Task_C
         {
             StreamReader sr = new StreamReader(@"brackets.in");
             StreamWriter sw = new StreamWriter(@"brackets.out");
-            const int size = 1000001;
-            
-            Stack Inp = new Stack(size);
+            const int size = 10001;
+            Stack St = new Stack(size);
 
             string bracket;
 
-    
-            while((bracket = sr.ReadLine()) != null)
+            while ((bracket = sr.ReadLine()) != null)
             {
-                
-                for(int i = 0; bracket[i] != (char)13; i++)
-                {
-                    Inp.push(bracket[i]);
 
-                    if(i == 0)
+                for (int i = 0; i < bracket.Length; i++)
+                {
+
+                    if (i == 0)
                     {
                         if (bracket[i] == ')' || bracket[i] == ']')
                         {
@@ -69,34 +67,38 @@ namespace Task_C
                             break;
                         }
                     }
+
                     else
-                        if((bracket[i] == ']') && (Inp.last() == '['))
-                        {
-                            Inp.pop();
-                            Inp.pop();
-                        }
-                        else
-                            if((bracket[i] == ')') && (Inp.last() == '('))
-                            {
-                                Inp.pop();
-                                Inp.pop();
-                            }
-                                else
-                                {
-                                  sw.WriteLine("NO");
-                                  break;
-                                }
+                        if ((bracket[i] == ']') && (St.last() == '['))
+                    {
+                        St.pop();
+                        continue;
+                    }
+                    else
+                            if ((bracket[i] == ')') && (St.last() == '('))
+                    {
+                        St.pop();
+                        continue;
+
+                    }
+
+                    St.push(bracket[i]);
                 }
 
-                if(Inp.last() == '0')
+                if (St.last() == '0')
                     sw.WriteLine("YES");
-            
+                else
+                    {
+                        sw.WriteLine("NO");
+                        St.count = 0;
+                    }
+
             }
-            
+
             sw.Close();
             sr.Close();
-            
-            
+
+
         }
     }
 }

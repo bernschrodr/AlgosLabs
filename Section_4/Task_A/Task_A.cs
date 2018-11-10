@@ -40,7 +40,6 @@ namespace FirstApp
             Stack Inp = new Stack(size);
 
             char operations;
-            int num;
 
             string str;
             while((str = sr.ReadLine()) != null)
