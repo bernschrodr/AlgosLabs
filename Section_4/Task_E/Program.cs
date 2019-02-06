@@ -5,22 +5,21 @@ namespace Task_E
 {
     class Queue
     {
-
         public struct Element
         {
-            public int indexStr, el;
-            public Element(int el, int indexStr)
+            public Int32 indexStr, el;
+            public Element(Int32 el, Int32 indexStr)
             {
                 this.el = el;
                 this.indexStr = indexStr;
             }
         }
 
-        public static int size;
-        public int head;
-        public int tail;
+        public static Int32 size;
+        public Int32 head;
+        public Int32 tail;
         Element[] queue;
-        public Queue(int n)
+        public Queue(Int32 n)
         {
             size = n;
             queue = new Element[n];
@@ -30,7 +29,7 @@ namespace Task_E
         }
 
 
-        public void Push(int InpElem, int ind)
+        public void Push(Int32 InpElem, Int32 ind)
         {
             queue[tail] = new Element(InpElem, ind);
 
@@ -44,12 +43,12 @@ namespace Task_E
         public string ExtractMin()
         {
 
-            int min = 2147483647;
-            int minIndex = 0;
+            Int32 min = 2147483646;
+            Int32 minIndex = 0;
 
-            for (int i = head; i > tail; --i)
+            for (Int32 i = head; i > tail; --i)
             {
-                int val = queue[i].el;
+                Int32 val = queue[i].el;
                 if (val < min)
                 {
                     min = val;
@@ -57,19 +56,19 @@ namespace Task_E
                 }
             }
 
-            queue[minIndex].el = 2147483647;
+            queue[minIndex].el = 2147483646;
             size--;
 
-            if (min == 2147483647)
+            if (min == 2147483646)
                 return "*";
             else
                 return min.ToString();
 
         }
 
-        public void DecreaseKey(int x, int y)
+        public void DecreaseKey(Int32 x, Int32 y)
         {
-            for (int i = head; i >= tail; i--)
+            for (Int32 i = head; i > tail; i--)
             {
                 if (queue[i].indexStr == x)
                     queue[i].el = y;
@@ -81,12 +80,12 @@ namespace Task_E
     {
         static void Main()
         {
-            StreamReader sr = new StreamReader(@"priorityqueue.in");
-            StreamWriter sw = new StreamWriter(@"priorityqueue.out");
-            const int size = 1000001;
+            StreamReader sr = new StreamReader("priorityqueue.in");
+            StreamWriter sw = new StreamWriter("priorityqueue.out");
+            const Int32 size = 1000001;
             Queue queue = new Queue(size);
             string str, str2, str3;
-            int indexstr = 0, pos = 0;
+            Int32 indexstr = 0, pos = 0;
 
             while ((str = sr.ReadLine()) != null)
             {
@@ -95,7 +94,7 @@ namespace Task_E
                 {
                     pos = str.IndexOf(" ");
                     str2 = str.Substring(pos);
-                    queue.Push(int.Parse(str2), indexstr);
+                    queue.Push(Int32.Parse(str2), indexstr);
                 }
 
                 if (str.IndexOf("extract-min") != -1)
@@ -109,7 +108,7 @@ namespace Task_E
                     str2 = str.Substring(str.IndexOf(" ")+1);
                     str3 = str2.Substring(str2.IndexOf(" ") + 1);
                     str2 = str2.Remove(str2.IndexOf(" "));
-                    queue.DecreaseKey(int.Parse(str2), int.Parse(str3));
+                    queue.DecreaseKey(Int32.Parse(str2), Int32.Parse(str3));
                 }
 
             }

@@ -6,7 +6,7 @@ extract-min
 push 4 
 push 5 
 extract-min 
-push 1 
+push -1 
 decrease-key 7 2 
 extract-min 
 extract-min 
