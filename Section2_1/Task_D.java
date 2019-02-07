@@ -8,11 +8,15 @@ public class Task_D {
         public LinkedList<Integer>[] ConnectedPoints; // ConnectedPoints[i] содержит список вершин, в которые есть рёбр
                                                       //  из вершины i.
 
+        private int[] matchMatrix;                                              
         private int ammount = 0;
         private int numPoints;
         private int numLines;
+        private int[][] input;
 
         Graph(int[][] Lines) {
+            input = Lines;
+            
             if (Lines[0][0] > 0 & Lines[0][1] > 0) {
                 numPoints = Lines[0][0];
                 numLines = Lines[0][1];
@@ -22,6 +26,7 @@ public class Task_D {
             ConnectedPoints = new LinkedList[numPoints];
             Component = new LinkedList<Integer>();
             used = new boolean[numPoints];
+            matchMatrix = new int[numPoints];
 
             for (int i = 0; i < numPoints; ++i)
                 ConnectedPoints[i] = new LinkedList<Integer>();
@@ -43,6 +48,7 @@ public class Task_D {
             Component.add(Point);
             for (int i = 0; i < ConnectedPoints[Point].size(); ++i) {
                 int to = ConnectedPoints[Point].get(i);
+                
                 if (!used[to])
                     dfs(to);
             }
@@ -54,6 +60,16 @@ public class Task_D {
                 used[i] = false;
             for (int i = 0; i < ConnectedPoints.length; ++i) {
                 if (!used[i]) {
+                    
+                    for(int j = 0; j < matchMatrix.length; ++j)
+                        {
+                            try {
+                                matchMatrix[Component.get(j)] = ammount + 1;
+                            } catch (Exception e) {
+                                
+                            }}
+                                
+
                     Component.clear();
                     dfs(i);
 
@@ -63,6 +79,7 @@ public class Task_D {
             }
 
         }
+        
 
         public int getAmmount() {
 
