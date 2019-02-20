@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Task_F {
+public class Task_F1 {
 
     public static void main(String[] args) {
 
@@ -29,20 +29,20 @@ public class Task_F {
                 inp = fin.readLine();
                 for (int j = 0; j < NumberOfElements; j++) {
                     charMatrix[i][j] = inp.charAt(j);
-                    
+                    NumberOfPoint++;
+                    intMatrix[i][j] = NumberOfPoint;
 
                     if(charMatrix[i][j] == '.' || charMatrix[i][j] == 'S'|| charMatrix[i][j] == 'T' ){
-                        NumberOfPoint++;
-                    intMatrix[i][j] = NumberOfPoint;
+                        
                 }
                     else
                         if(charMatrix[i][j] == '#')
                             intMatrix[i][j] = 0;
                     
                     if (charMatrix[i][j] == 'S')
-                        startpoint = NumberOfElements * (i + 1) + j + 1;
+                        startpoint = NumberOfElements * i  + j + 1;
                     else if (charMatrix[i][j] == 'T')
-                        endpoint = NumberOfElements * (i + 1) + j + 1;
+                        endpoint = NumberOfElements * i + j + 1;
                     
 
                     
@@ -52,8 +52,27 @@ public class Task_F {
 
             Graph graph = new Graph(NumberOfPoint, NumberOfLine);
 
+            for(int j = 0; j<NumberOfElements; j++){
+            if (intMatrix[0][j] > 0 && intMatrix[1][j] > 0) {
+                int Point1 = intMatrix[0][j];
+                int Point2 = intMatrix[1][j];
+                graph.ConnectedPoints[Point1 - 1].add(Point2 - 1);
+                graph.ConnectedPoints[Point2 - 1].add(Point1 - 1);
+            }}
+
+            for (int j = 0; j < NumberOfElements - 1; ++j){
+                if (intMatrix[0][j] > 0 && intMatrix[0][j+1] > 0) {
+                    int Point1 = intMatrix[0][j];
+                    int Point2 = intMatrix[0][j+1];
+                    graph.ConnectedPoints[Point1 - 1].add(Point2 - 1);
+                    graph.ConnectedPoints[Point2 - 1].add(Point1 - 1);
+            }
+            
+            
+        }
+
             for (int i = 1; i < NumberOfLineElements; ++i) {
-                for (int j = 0; j < NumberOfElements - 1; j++) {
+                for (int j = 0; j < NumberOfElements; j++) {
                     try {
                         if (intMatrix[i][j] > 0 && intMatrix[i-1][j] > 0) {
                             int Point1 = intMatrix[i][j];
@@ -61,6 +80,7 @@ public class Task_F {
                             graph.ConnectedPoints[Point1 - 1].add(Point2 - 1);
                             graph.ConnectedPoints[Point2 - 1].add(Point1 - 1);
                         }
+                        if(j <= NumberOfElements-1)
                         if (intMatrix[i][j] > 0 && intMatrix[i][j+1] > 0) {
                             int Point1 = intMatrix[i][j];
                             int Point2 = intMatrix[i][j+1];
@@ -75,13 +95,31 @@ public class Task_F {
             }
 
             // CALCULATE
-            String out = graph.find_length(startpoint);
-            int[] lengthForPoints = graph.getLengthMatrix();
-            System.out.println(out);
+            int[] out = graph.find_length(startpoint,endpoint);
+            out[0]=startpoint;
+            int k = 0;
 
-            // OUTPUT
-            for (int i = 0; i < NumberOfPoint; i++)
-                fout.write(String.valueOf(lengthForPoints[i]) + " ");
+            String outstr ="";
+            while(out[k] != 0 && k < NumberOfPoint-1){
+                if(out[k+1]==0)
+                    break;
+
+                if(out[k]<out[k+1])
+                    if((out[k]-1)/NumberOfElements == (out[k+1]-1)/NumberOfElements)
+                        outstr+='R';
+                    else
+                    outstr+='D';
+
+                if(out[k]>out[k+1])
+                    if((out[k]-1)/NumberOfElements == (out[k+1]-1)/NumberOfElements)
+                    outstr+='L';
+                    else
+                    outstr+='U';
+                k++;
+            }
+            fout.write(outstr.length() + "\n" + outstr);
+
+            
 
             fout.close();
             fin.close();
@@ -150,7 +188,7 @@ public class Task_F {
 
         }
 
-        String find_length(int Point) {
+        int[] find_length(int Point, int endpoint) {
             if (!Component.isEmpty())
                 Component.clear();
             Component.add(Point);
@@ -174,22 +212,23 @@ public class Task_F {
             }
 
             
-            String str = "";
-            for (int i = 0; i < numPoints; i++) {
-            if (!used[i]) 
-            str +="No path!\n"; 
+            int[] str = new int[numPoints];
+            
+            if (!used[Point]) 
+            str[0] = 0; 
             else 
             { 
             Vector<Integer> path = new Vector<Integer>(numPoints);
-            for (int firstElement = i; firstElement != -1; firstElement = previous[firstElement])
+            for (int firstElement = endpoint; firstElement != -1; firstElement = previous[firstElement])
             path.add(firstElement);
             Collections.reverse(path);
-            str += "Path " + String.valueOf(i) + " : ";
-            for (int j = 0; j < path.size(); ++j)
-                str += String.valueOf(path.get(j) + 1) + " ";
-            str += "\n"; }
+
+            for (int j = 1; j < path.size()+1; ++j)
+                str[j] = path.get(j-1) + 1;
+            str[path.size()+1] = endpoint;
+        }
+
               
-              }
             return str;
 
         }
