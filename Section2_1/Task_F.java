@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Task_F1 {
+public class Task_F {
 
     public static void main(String[] args) {
 
