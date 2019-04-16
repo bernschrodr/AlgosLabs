@@ -1,86 +1,71 @@
+
 import java.io.*;
 import java.util.*;
 
 public class Task_B {
 
-    public static void main(String[] args) {
+    public static final int INF = 1000000000;
+    public static void main(String[] args) throws FileNotFoundException {
+        FastScanner scan = new FastScanner(new File("pathsg.in"));
+        int n = scan.nextInt();
+        int m = scan.nextInt();
 
-        Scanner fin = new Scanner("pathsg.in");
+        int[][] graph = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(graph[i], INF);
+            graph[i][i] = 0;
+        }
 
-            int V = fin.nextInt();
-            int E = fin.nextInt();
+        for (int i = 0; i < m; i++) {
+            int row = scan.nextInt() - 1;
+            int column = scan.nextInt() - 1;
+            int value = scan.nextInt();
+            graph[row][column] = value;
+        }
 
-            // Init
-            Long graph[][] = new Long[V][V];
-            for (int i = 0; i < V; i++)
-                for (int j = 0; j < V; j++) {
-                    if (i == j)
-                        graph[i][j] = (long) 0;
-                    else
-                        graph[i][j] = INF;
-
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if(graph[i][k] + graph[k][j] < graph[i][j])
+                        graph[i][j] = graph[i][k] + graph[k][j];
                 }
-
-            // Fill
-            for (int i = 0; i < E; i++) {
-                int row = fin.nextInt();
-                int column = fin.nextInt();
-                graph[row][column] = fin.nextLong();
             }
+        }
 
-            AllPairShortestPath grph = new AllPairShortestPath(V);
-            grph.floydWarshall(graph);
-
-            fin.close();
-
-        
-
+        PrintWriter out = new PrintWriter("pathsg.out");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                out.print(graph[i][j] + " ");
+            }
+            out.println();
+        }
+        out.close();
     }
 
-    final static long INF = Long.MAX_VALUE;
+    static class FastScanner {
+        BufferedReader br;
+        StringTokenizer st;
 
-    static class AllPairShortestPath {
-        int V;
-
-        AllPairShortestPath(int V) {
-            this.V = V;
+        FastScanner(File f) {
+            try {
+                br = new BufferedReader(new FileReader(f));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
-        void floydWarshall(Long graph[][]) {
-            Long dist[][] = new Long[V][V];
-            int i, j, k;
-
-            for (i = 0; i < V; i++)
-                for (j = 0; j < V; j++)
-                    dist[i][j] = graph[i][j];
-
-            for (k = 0; k < V; k++) {
-                for (i = 0; i < V; i++) {
-                    for (j = 0; j < V; j++) {
-                        if (dist[i][k] + dist[k][j] < dist[i][j])
-                            dist[i][j] = dist[i][k] + dist[k][j];
-                    }
+        String next() {
+            while (st == null || !st.hasMoreTokens()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
                 }
             }
-            try{
-            printSolution(dist);
-            }
-            catch(Exception exception){
-
-            }
-            
+            return st.nextToken();
         }
 
-        void printSolution(Long dist[][]) throws FileNotFoundException {
-            PrintWriter fout = new PrintWriter("pathsg.out");
-            for (int i = 0; i < V; ++i) {
-                for (int j = 0; j < V; ++j) {
-                    fout.print(dist[i][j] + " ");
-                }
-                fout.println();
-            }
-            fout.close();
+        int nextInt() {
+            return Integer.parseInt(next());
         }
-
     }
 }
